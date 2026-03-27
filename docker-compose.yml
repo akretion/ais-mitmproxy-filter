@@ -1,5 +1,6 @@
 services:
   ais:
+    restart: always
     image: mitmproxy/mitmproxy:latest
     ports:
       - "8080:8080"
