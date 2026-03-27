@@ -40,19 +40,18 @@ def generate_credentials(args):
     print(f'ClientID: {client_id}')
     print(f'Secret: {client_secret}')
 
-    if args.config_file:
-        config_file = args.config_file
-        if not os.path.exists(config_file):
-            print(f"File {config_file} doesn't exist.")
-            sys.exit(1)
-        with open(config_file, 'r+') as f:
-            cparser = configparser.ConfigParser()
-            cparser.read_file(f)
-            cparser['odoo'][client_id] = client_secret
-            f.truncate(0)
-            f.seek(0)
-            cparser.write(f)
-            print(f"Client ID and secret added to section [odoo] of {config_file}")
+    config_file = args.config_file
+    if not os.path.exists(config_file):
+        print(f"File {config_file} doesn't exist.")
+        sys.exit(1)
+    with open(config_file, 'r+') as f:
+        cparser = configparser.ConfigParser()
+        cparser.read_file(f)
+        cparser['odoo'][client_id] = client_secret
+        f.truncate(0)
+        f.seek(0)
+        cparser.write(f)
+        print(f"Client ID and secret added to section [odoo] of {config_file}")
 
 
 def main(args=None):
