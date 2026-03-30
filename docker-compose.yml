@@ -7,4 +7,4 @@ services:
     volumes:
       - ./bridgeapi_filter.py:/opt/bridgeapi_filter.py
       - ./config:/opt/config
-    command: mitmdump -s /opt/bridgeapi_filter.py --set config=/opt/config/bridgeapi_filter.conf --mode reverse:https://api.bridgeapi.io --listen-port 8080
+    command: mitmdump -s /opt/bridgeapi_filter.py --set config=/opt/config/bridgeapi_filter.conf --set connection_strategy=lazy --mode reverse:https://api.bridgeapi.io --listen-port 8080
