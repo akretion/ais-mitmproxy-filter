@@ -17,7 +17,7 @@
 # Command to install: sudo apt install mitmproxy
 
 # Command to start:
-# mitmdump -s bridgeapi_filter.py --set config=/etc/bridgeapi_filter.conf --mode reverse:https://api.bridgeapi.io --listen-port 8442
+# mitmdump -s bridgeapi_filter.py --set config=/etc/bridgeapi_filter.conf --set connection_strategy=lazy --mode reverse:https://api.bridgeapi.io --listen-port 8442
 
 # Generate the Fernet symetric encryption key to be stored in the config file:
 # from cryptography.fernet import Fernet
