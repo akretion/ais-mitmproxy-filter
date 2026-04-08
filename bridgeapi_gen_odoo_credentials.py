@@ -46,6 +46,7 @@ def generate_credentials(args):
         sys.exit(1)
     with open(config_file, 'r+') as f:
         cparser = configparser.ConfigParser()
+        cparser.optionxform = lambda option: option
         cparser.read_file(f)
         cparser['odoo'][client_id] = client_secret
         f.truncate(0)

@@ -79,6 +79,7 @@ class BridgeApiFilter:
                 return
             try:
                 config = configparser.ConfigParser()
+                config.optionxform = lambda option: option
                 config.read(config_path)
                 self.bridgeapi_client_id = config['bridge_api']['client_id']
                 self.bridgeapi_secret = config['bridge_api']['secret']
