@@ -8,7 +8,6 @@ import configparser
 import sys
 import os
 import requests
-from pprint import pprint
 
 BRIDGE_VERSION = '2025-01-15'
 BASE_URL = 'https://api.bridgeapi.io/v3'
@@ -19,7 +18,7 @@ __date__ = "April 13th 2026"
 __version__ = "0.1"
 
 
-def list_users(args):
+def delete_user(args):
     config_file = args.config_file
     if not os.path.exists(config_file):
         print(f"File {config_file} doesn't exist.")
@@ -33,40 +32,42 @@ def list_users(args):
         'Client-Id': client_id,
         'Client-Secret': client_secret,
         'accept': 'application/json',
-        'content-type': 'application/json',
     }
-    list_user_res = requests.get(f"{BASE_URL}/aggregation/users", headers=headers)
-    if list_user_res.status_code != 200:
-        print(f"Failed to list users. HTTP error code: {list_user_res.status_code}.")
+    user_uuid = args.user_uuid and args.user_uuid[0]
+    if not user_uuid:
+        user_uuid = input("Enter Bridge User UUID to delete: ")
+    if not user_uuid:
+        print('No user UUID entered.')
         sys.exit(1)
-    user_list_json = list_user_res.json()
-    pprint(user_list_json)
-    print('List of BridgeAPI users:')
-    user_list = user_list_json.get('resources', [])
-    count = 0
-    for user in user_list:
-        count += 1
-        print(f"User '{user['external_user_id']}' UUID {user['uuid']}")
-    print(f'Total number of users: {count}')
-    if user_list_json['pagination']['next_uri']:
-        print('More than one page. TODO implement multi-page')
+    confirm = input(f"You are about to delete Bridge user UUID '{user_uuid}'. Do you confirm (yes/no)? ")
+    if confirm != 'yes':
+        print('Exiting. No user deleted.')
         sys.exit(1)
+    url = f"{BASE_URL}/aggregation/users/{user_uuid}"
+    print(f'Sending DELETE request on {url}')
+    del_user_res = requests.delete(url, headers=headers)
+    if del_user_res.status_code == 204:
+        print(f"BridgeAPI user UUID '{user_uuid}' successfully deleted.")
+    else:
+        print(f"Failed to delete user. HTTP error code: {del_user_res.status_code}.")
 
 
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
-    usage = "bridgeapi_list_users.py"
+    usage = "bridgeapi_del_user.py <user_uuid>"
     epilog = "Author: %s - Version: %s" % (__author__, __version__)
-    description = "List Bridge API users. "
+    description = "Delete a Bridge API user. "
     parser = argparse.ArgumentParser(
         usage=usage, epilog=epilog, description=description)
     parser.add_argument(
         '-c', '--config', dest="config_file", default=DEFAULT_CONFIG_FILE,
         help=f"Path to the BridgeAPI filter configuration file. "
         f"Default value: {DEFAULT_CONFIG_FILE}")
+    parser.add_argument(
+        "user_uuid", nargs='*', help="Bridge API user UUID")
     args = parser.parse_args()
-    list_users(args)
+    delete_user(args)
 
 
 def run():
