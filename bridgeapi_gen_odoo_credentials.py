@@ -37,8 +37,10 @@ def generate_credentials(args):
         sys.exit(1)
     client_id = f"odoo_bridge_id-{project}-{secrets.token_urlsafe(25)}"
     client_secret = f"odoo_bridge_secret-{project}-{secrets.token_urlsafe(60)}"
-    print(f'ClientID: {client_id}')
-    print(f'Secret: {client_secret}')
+    print("Copy-paste the 2 lines below in the Odoo server config file:")
+    print("-----------------------------")
+    print(f'account_statement_import_api_bridge_login = {client_id}')
+    print(f'account_statement_import_api_bridge_password = {client_secret}')
 
     config_file = args.config_file
     if not os.path.exists(config_file):
