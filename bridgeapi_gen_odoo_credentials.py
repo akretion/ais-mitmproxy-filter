@@ -41,6 +41,7 @@ def generate_credentials(args):
     print("-----------------------------")
     print(f'account_statement_import_api_bridge_login = {client_id}')
     print(f'account_statement_import_api_bridge_password = {client_secret}')
+    print("-----------------------------")
 
     config_file = args.config_file
     if not os.path.exists(config_file):
