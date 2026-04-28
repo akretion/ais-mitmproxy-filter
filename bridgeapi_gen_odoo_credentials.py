@@ -13,6 +13,7 @@ import secrets
 PROJECT_NAME_MAX_LENGTH = 20
 PROJECT_NAME_MIN_LENGTH = 3
 DEFAULT_CONFIG_FILE = "/etc/bridgeapi_filter.conf"
+URL = "https://ais.akretion.com"
 
 __author__ = "Alexis de Lattre <alexis.delattre@akretion.com>"
 __date__ = "March 27th 2026"
@@ -41,6 +42,7 @@ def generate_credentials(args):
     print("-----------------------------")
     print(f'account_statement_import_api_bridge_login = {client_id}')
     print(f'account_statement_import_api_bridge_password = {client_secret}')
+    print(f'account_statement_import_api_bridge_url = {URL}')
     print("-----------------------------")
 
     config_file = args.config_file
