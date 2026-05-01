@@ -55,11 +55,13 @@ class BridgeApiFilter:
         self.allowed_path2methods = {
             '/v3/aggregation/authorization/token': ['POST'],
             '/v3/aggregation/connect-sessions': ['POST'],
-            '/v3/aggregation/users': ['POST', 'DELETE'],
+            '/v3/aggregation/users': ['POST'],
+            '/v3/aggregation/users/<ID>': ['DELETE'],
             '/v3/aggregation/items': ['GET'],
             '/v3/aggregation/transactions': ['GET'],
             '/v3/aggregation/accounts': ['GET'],
             '/v3/providers': ['GET'],
+            '/v3/providers/<ID>': ['GET'],
             }
 
     # define the option on the command line
@@ -121,13 +123,20 @@ class BridgeApiFilter:
             return
         path = flow.request.path.split('?')[0]
         method = flow.request.method
-        if method == "DELETE":
-            path_to_check = '/'.join(path.split('/')[:-1])
-        else:
-            path_to_check = path
-        if (
-                path_to_check in self.allowed_path2methods and
-                method in self.allowed_path2methods[path_to_check]):
+        end_path = path.split('/')[-1]
+        start_path = '/'.join(path.split('/')[:-1])
+        path_method_ok = False
+        for allowed_path, allowed_methods in self.allowed_path2methods.items():
+            if allowed_path.endswith('<ID>'):
+                allowed_start_path = allowed_path[:-5]
+                if end_path.isdigit() and allowed_start_path == start_path and method in allowed_methods:
+                    path_method_ok = True
+                    break
+            else:
+                if path == allowed_path and method in allowed_methods:
+                    path_method_ok = True
+                    break
+        if path_method_ok:
             ctx.log.info(f'{method} on {path} is allowed')
         else:
             flow.response = http.Response.make(
