@@ -58,6 +58,7 @@ class BridgeApiFilter:
             '/v3/aggregation/users': ['POST'],
             '/v3/aggregation/users/<ID>': ['DELETE'],
             '/v3/aggregation/items': ['GET'],
+            '/v3/aggregation/items/<ID>': ['DELETE'],
             '/v3/aggregation/transactions': ['GET'],
             '/v3/aggregation/accounts': ['GET'],
             '/v3/providers': ['GET'],
@@ -181,7 +182,7 @@ class BridgeApiFilter:
                         f"is not a string -> rejected.",
                         {"Content-Type": "text/plain"}
                     )
-        elif method == "DELETE" and path_to_check == "/v3/aggregation/users":
+        elif method == "DELETE" and start_path == "/v3/aggregation/users":
             uuid_str = path.split('/')[-1]
             uuid_bytes = uuid_str.encode('utf-8')
             encrypted_uuid_bytes = self.cipher.decrypt(uuid_bytes)
